@@ -1,68 +1,132 @@
-import Image from "next/image";
+'use client';
+
+import { useEffect, useRef, useState, useCallback } from 'react';
+import NavBar from '@/components/NavBar';
+import HeroSection from '@/components/sections/HeroSection';
+import ExplicacionSection from '@/components/sections/ExplicacionSection';
+import ContactoSection from '@/components/sections/ContactoSection';
+
+const SECTION_IDS = ['hero', 'explicacion', 'contacto'];
 
 export default function Home() {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const isScrollingRef = useRef(false);
+  const touchStartYRef = useRef(0);
+
+  const goToSection = useCallback((index: number) => {
+    if (index < 0 || index >= SECTION_IDS.length) return;
+
+    isScrollingRef.current = true;
+    setCurrentIndex(index);
+
+    // Período de enfriamiento para evitar saltos acelerados
+    setTimeout(() => {
+      isScrollingRef.current = false;
+    }, 700);
+  }, []);
+
+  useEffect(() => {
+    // ── Interceptar Rueda del Ratón (Wheel) ──
+    const handleWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      if (isScrollingRef.current) return;
+
+      if (e.deltaY > 0) {
+        goToSection(currentIndex + 1);
+      } else if (e.deltaY < 0) {
+        goToSection(currentIndex - 1);
+      }
+    };
+
+    // ── Interceptar Gestos Táctiles en Móviles (Touch) ──
+    const handleTouchStart = (e: TouchEvent) => {
+      touchStartYRef.current = e.touches[0].clientY;
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      e.preventDefault();
+    };
+
+    const handleTouchEnd = (e: TouchEvent) => {
+      if (isScrollingRef.current) return;
+      const touchEndY = e.changedTouches[0].clientY;
+      const diffY = touchStartYRef.current - touchEndY;
+
+      if (Math.abs(diffY) > 35) {
+        if (diffY > 0) {
+          goToSection(currentIndex + 1);
+        } else {
+          goToSection(currentIndex - 1);
+        }
+      }
+    };
+
+    // ── Interceptar Teclas de Navegación ──
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const activeEl = document.activeElement;
+      if (
+        activeEl &&
+        (activeEl.tagName === 'INPUT' ||
+          activeEl.tagName === 'TEXTAREA' ||
+          (activeEl as HTMLElement).isContentEditable)
+      ) {
+        return;
+      }
+
+      if (isScrollingRef.current) return;
+
+      if (e.key === 'ArrowDown' || e.key === 'PageDown') {
+        e.preventDefault();
+        goToSection(currentIndex + 1);
+      } else if (e.key === 'ArrowUp' || e.key === 'PageUp') {
+        e.preventDefault();
+        goToSection(currentIndex - 1);
+      }
+    };
+
+    window.addEventListener('wheel', handleWheel, { passive: false });
+    window.addEventListener('touchstart', handleTouchStart, { passive: true });
+    window.addEventListener('touchmove', handleTouchMove, { passive: false });
+    window.addEventListener('touchend', handleTouchEnd, { passive: true });
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      window.removeEventListener('wheel', handleWheel);
+      window.removeEventListener('touchstart', handleTouchStart);
+      window.removeEventListener('touchmove', handleTouchMove);
+      window.removeEventListener('touchend', handleTouchEnd);
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [currentIndex, goToSection]);
+
+  // Permitir que la NavBar y los botones llamen a la navegación
+  useEffect(() => {
+    const handleNavScrollTo = (e: CustomEvent<{ id: string }>) => {
+      const index = SECTION_IDS.indexOf(e.detail.id);
+      if (index !== -1) {
+        goToSection(index);
+      }
+    };
+
+    window.addEventListener('navScrollTo' as any, handleNavScrollTo);
+    return () => {
+      window.removeEventListener('navScrollTo' as any, handleNavScrollTo);
+    };
+  }, [goToSection]);
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
+    <div className="h-dvh w-full overflow-hidden relative bg-gris-oscuro">
+      {/* Barra de navegación flotante */}
+      <NavBar />
+
+      {/* Contenedor deslizante ultrasuave con transform CSS (GPU accelerated) */}
+      <main
+        className="h-dvh w-full transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]"
+        style={{ transform: `translateY(-${currentIndex * 100}dvh)` }}
+      >
+        <HeroSection />
+        <ExplicacionSection />
+        <ContactoSection />
       </main>
     </div>
   );
