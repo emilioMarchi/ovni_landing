@@ -29,7 +29,7 @@ export interface ClientAudioMessage {
 
 export interface ClientTextMessage {
   type: 'text';
-  text: string;
+  content: string;
 }
 
 export type ClientMessage = ClientAudioMessage | ClientTextMessage;

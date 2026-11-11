@@ -23,9 +23,9 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "OVNISTUDIO | Sistemas Cognitivos Artificiales e IA Local",
+  title: "OVNISTUDIO | Desarrollo de Software e IA para Sitios Web y Sistemas Privados",
   description:
-    "Estudio de desarrollo de sistemas cognitivos artificiales, automatización de flujos de trabajo y bases de conocimiento semánticas con IA local.",
+    "Desarrollo de software a medida e integración de agentes de inteligencia artificial en sitios web y sistemas privados.",
   icons: {
     icon: "/logo.png",
   },

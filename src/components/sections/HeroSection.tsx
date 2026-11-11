@@ -38,16 +38,16 @@ export default function HeroSection() {
       {/* Contenido principal */}
       <div className="relative z-10 flex flex-col items-center text-center max-w-4xl gap-8">
 
-        {/* IA LOCAL Y SISTEMAS PRIVADOS */}
+        {/* DESARROLLO DE SOFTWARE & IA A MEDIDA */}
         <p className="font-space-mono text-sm md:text-base lg:text-lg font-bold tracking-[0.25em] uppercase text-celeste-muted">
-          IA LOCAL Y SISTEMAS PRIVADOS
+          DESARROLLO DE SOFTWARE & IA A MEDIDA
         </p>
 
         {/* Título principal */}
         <h1 className="font-space-mono font-normal text-3xl sm:text-4xl md:text-5xl lg:text-6xl leading-[1.05] tracking-tight text-texto-main">
           Te convenzo en{' '}
           <span className="text-celeste-muted font-medium">3 pasos</span>{' '}
-          de que la IA local y los sistemas privados pueden ser los aliados de tu proyecto.
+          de integrar IA en tu sitio web y sistemas privados.
         </h1>
 
         {/* ── ITEMS FLOTANTES SECUENCIALES (Texto solo más grande sin container) ── */}

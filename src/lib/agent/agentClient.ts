@@ -3,6 +3,11 @@ import {
   ServerMessage,
 } from './agentTypes';
 import { MockAgentServer } from './mockAgentServer';
+import {
+  AGENT_BACKENDS,
+  AgentBackendId,
+  DEFAULT_BACKEND_ID,
+} from './agentBackends';
 
 export class AgentClient {
   private ws: WebSocket | null = null;
@@ -11,11 +16,31 @@ export class AgentClient {
   private onStateChangeCallbacks: Set<(state: ConnectionState) => void> = new Set();
   private onMessageCallbacks: Set<(msg: ServerMessage) => void> = new Set();
   private isMockMode = false;
+  private backendId: AgentBackendId = DEFAULT_BACKEND_ID;
 
   constructor() {
-    const wsUrl = process.env.NEXT_PUBLIC_AGENT_SERVER_URL || 'ws://localhost:8000/ws/agent';
-    const forceMock = process.env.NEXT_PUBLIC_USE_MOCK_AGENT === 'true';
-    this.isMockMode = forceMock;
+    this.isMockMode = process.env.NEXT_PUBLIC_USE_MOCK_AGENT === 'true';
+  }
+
+  public getBackendId(): AgentBackendId {
+    return this.backendId;
+  }
+
+  public getBackend() {
+    return AGENT_BACKENDS[this.backendId];
+  }
+
+  /**
+   * Cambia el destino del socket y reconecta. La sesion actual no se arrastra
+   * al backend nuevo porque cada uno mantiene su propio estado.
+   */
+  public setBackend(id: AgentBackendId): void {
+    if (id === this.backendId) return;
+    this.backendId = id;
+
+    const wasActive = this.connectionState !== 'disconnected';
+    this.disconnect();
+    if (wasActive) this.connect();
   }
 
   public connect(): void {
@@ -35,7 +60,7 @@ export class AgentClient {
       return;
     }
 
-    const wsUrl = process.env.NEXT_PUBLIC_AGENT_SERVER_URL || 'ws://localhost:8000/ws/agent';
+    const wsUrl = this.getBackend().url;
 
     try {
       console.log('[AgentClient] Conectando a WebSocket:', wsUrl);
@@ -74,6 +99,7 @@ export class AgentClient {
 
   public disconnect(): void {
     if (this.ws) {
+      this.ws.onclose = null;
       this.ws.close();
       this.ws = null;
     }

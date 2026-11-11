@@ -1,6 +1,6 @@
 'use client';
 
-import { Play, Brain, ShieldCheck, Zap } from 'lucide-react';
+import { Play, Bot, Compass, UserCheck } from 'lucide-react';
 
 export default function ExplicacionSection() {
   return (
@@ -27,60 +27,67 @@ export default function ExplicacionSection() {
 
         {/* Botón Play central */}
         <div className="
-          relative z-10 flex items-center justify-center
-          w-16 h-16 md:w-20 md:h-20 rounded-full
-          bg-celeste-muted/20 border border-celeste-muted/40
-          group-hover:bg-celeste-muted/30 group-hover:scale-110 group-hover:border-celeste-muted
-          transition-all duration-300 shadow-2xl shadow-celeste-muted/20
+          relative z-10 flex flex-col items-center gap-3
         ">
-          <Play className="w-7 h-7 md:w-8 md:h-8 text-celeste-muted fill-celeste-muted ml-1" />
+          <div className="
+            flex items-center justify-center
+            w-16 h-16 md:w-20 md:h-20 rounded-full
+            bg-celeste-muted/20 border border-celeste-muted/40
+            group-hover:bg-celeste-muted/30 group-hover:scale-110 group-hover:border-celeste-muted
+            transition-all duration-300 shadow-2xl shadow-celeste-muted/20
+          ">
+            <Play className="w-7 h-7 md:w-8 md:h-8 text-celeste-muted fill-celeste-muted ml-1" />
+          </div>
+          <span className="font-space-mono text-xs md:text-sm text-texto-main/90 font-medium tracking-wide">
+            Ver Demo: Concesionario Inteligente
+          </span>
         </div>
 
         {/* Indicador inferior dentro del video */}
-        <p className="absolute bottom-3 left-6 font-space-mono text-[10px] md:text-xs text-texto-sub/50 uppercase tracking-widest">
-          Video Explicativo OVNISTUDIO
+        <p className="absolute bottom-3 left-6 font-space-mono text-[10px] md:text-xs text-texto-sub/60 uppercase tracking-widest">
+          Demo en vivo · Sitio Web + Copiloto IA Autónomo
         </p>
       </div>
 
       {/* ── RESUMEN DESARROLLADO EN LA PARTE INFERIOR ── */}
       <div className="w-full max-w-6xl mx-auto px-6 md:px-12 pt-4 md:pt-6 grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8 items-start shrink-0">
         
-        {/* Pilar 1: Sistemas Cognitivos */}
+        {/* Pilar 1: Copiloto IA 24/7 */}
         <div className="flex flex-col gap-1.5 border-l border-gris-border/80 pl-4 md:pl-5 hover:border-celeste-muted/60 transition-colors">
           <div className="flex items-center gap-2 text-celeste-muted">
-            <Brain className="w-4 h-4 opacity-80 shrink-0" />
+            <Bot className="w-4 h-4 opacity-80 shrink-0" />
             <h3 className="font-space-mono font-bold text-texto-main text-xs sm:text-sm tracking-wide uppercase">
-              Sistemas Cognitivos
+              Copiloto IA 24/7
             </h3>
           </div>
           <p className="font-inter text-texto-sub text-xs leading-relaxed">
-            Modelos de IA diseñados para aprender y razonar sobre la lógica de tu negocio, generando bases de conocimiento semánticas con precisión contextual.
+            Sitio web + agente inteligente que responde consultas complejas al instante, asesora de forma personalizada y nunca deja a un cliente sin atención.
           </p>
         </div>
 
-        {/* Pilar 2: Privacidad e IA Local */}
+        {/* Pilar 2: Navegación Asistida */}
         <div className="flex flex-col gap-1.5 border-l border-gris-border/80 pl-4 md:pl-5 hover:border-amarillo-muted/60 transition-colors">
           <div className="flex items-center gap-2 text-amarillo-muted">
-            <ShieldCheck className="w-4 h-4 opacity-80 shrink-0" />
+            <Compass className="w-4 h-4 opacity-80 shrink-0" />
             <h3 className="font-space-mono font-bold text-texto-main text-xs sm:text-sm tracking-wide uppercase">
-              IA Local y Privada
+              Navegación Asistida
             </h3>
           </div>
           <p className="font-inter text-texto-sub text-xs leading-relaxed">
-            Infraestructura privada donde tus datos confidenciales permanecen 100% bajo tu control, sin dependencia de terceros ni filtración de información.
+            La IA guía activamente al usuario por el sitio, filtrando catálogo, recomendando unidades o secciones según sus necesidades exactas en tiempo real.
           </p>
         </div>
 
-        {/* Pilar 3: Automatización de Flujos */}
+        {/* Pilar 3: Captura y Calificación de Leads */}
         <div className="flex flex-col gap-1.5 border-l border-gris-border/80 pl-4 md:pl-5 hover:border-celeste-muted/60 transition-colors">
           <div className="flex items-center gap-2 text-celeste-muted">
-            <Zap className="w-4 h-4 opacity-80 shrink-0" />
+            <UserCheck className="w-4 h-4 opacity-80 shrink-0" />
             <h3 className="font-space-mono font-bold text-texto-main text-xs sm:text-sm tracking-wide uppercase">
-              Flujos Automatizados
+              Guarda y Califica Leads
             </h3>
           </div>
           <p className="font-inter text-texto-sub text-xs leading-relaxed">
-            Agentes autónomos e interfaces interactivas que ejecutan tareas complejas de extremo a extremo, eliminando fricciones operativas en tus procesos.
+            Detecta la intención de compra, recolecta datos clave de contacto y califica prospectos listos para tu equipo comercial o integración con CRM privado.
           </p>
         </div>
 

@@ -5,15 +5,15 @@ import { ChatMessage, ServerMessage } from './agentTypes';
  */
 
 const RESPUESTAS_INICIALES = [
-  '¡Hola! Soy EVA, la IA de OVNISTUDIO. Creamos soluciones de inteligencia artificial local y sistemas cognitivos a medida, ¿te ayudo en algo?',
-  '¡Bienvenido/a! Me presento: soy EVA. Estoy acá para mostrarte cómo optimizamos flujos de trabajo con agentes autónomos totalmente privados, ¿en qué te puedo colaborar hoy?',
+  '¡Hola! Soy EVA, la IA de OVNISTUDIO. Desarrollamos software e integramos inteligencia artificial en sitios web y sistemas privados, ¿te ayudo con algún proyecto?',
+  '¡Bienvenido/a! Soy EVA. Te muestro cómo copilotos de IA pueden atender consultas 24/7, guiar a tus usuarios y calificar leads en tu web o sistemas internos, ¿en qué te puedo colaborar?',
 ];
 
 const RESPUESTAS_CONSULTA = [
-  'Con respecto a tu consulta: en OVNISTUDIO desarrollamos agentes de IA que funcionan 100% en tu infraestructura local. Esto garantiza privacidad total sin enviar información a servidores externos.',
-  'Nuestra arquitectura RAG permite conectar tus bases de datos y documentos para que el agente responda preguntas con precisión y contexto actualizado.',
-  'Podemos integrar automatizaciones personalizadas, gestión de leads y procesamiento de voz en tiempo real. ¿Te gustaría coordinar una demostración con nuestro equipo técnico?',
-  'Totalmente. Nuestros sistemas están diseñados para ser ultra rápidos y adaptables a cualquier flujo empresarial. ¿Querés que profundicemos en algún aspecto en particular?',
+  'Con respecto a tu consulta: desarrollamos sitios web y sistemas privados con agentes de IA integrados que funcionan como copilotos para tus usuarios.',
+  'Nuestros copilotos pueden responder consultas complejas las 24 hs, navegar y recomendar productos o servicios del sitio, y guardar o calificar leads de forma automática.',
+  'Podemos integrar estas soluciones tanto en páginas web públicas como en plataformas internas o sistemas de gestión privados con máxima seguridad.',
+  'Totalmente. ¿Te gustaría coordinar una demo personalizada o ver cómo aplicarlo al sitio o sistema de tu negocio?',
 ];
 
 export class MockAgentServer {

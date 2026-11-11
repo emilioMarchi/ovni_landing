@@ -7,6 +7,11 @@ import {
   ServerMessage,
 } from '@/lib/agent/agentTypes';
 import { globalAgentClient } from '@/lib/agent/agentClient';
+import {
+  AGENT_BACKEND_LIST,
+  AGENT_BACKENDS,
+  AgentBackendId,
+} from '@/lib/agent/agentBackends';
 
 export function useAgentSocket() {
   const [connectionState, setConnectionState] =
@@ -15,6 +20,10 @@ export function useAgentSocket() {
     'idle' | 'listening' | 'processing' | 'speaking'
   >('idle');
   const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [backendId, setBackendId] = useState<AgentBackendId>(
+    globalAgentClient.getBackendId(),
+  );
+  const backend = AGENT_BACKENDS[backendId];
 
   useEffect(() => {
     // Conectar automáticamente al montar
@@ -112,6 +121,14 @@ export function useAgentSocket() {
     setMessages([]);
   }, []);
 
+  const switchBackend = useCallback((id: AgentBackendId) => {
+    setBackendId(id);
+    // La conversacion anterior no aplica al backend nuevo.
+    setMessages([]);
+    setAgentStatus('idle');
+    globalAgentClient.setBackend(id);
+  }, []);
+
   return {
     connectionState,
     agentStatus,
@@ -122,5 +139,9 @@ export function useAgentSocket() {
     clearMessages,
     connect: () => globalAgentClient.connect(),
     disconnect: () => globalAgentClient.disconnect(),
+    backend,
+    backendId,
+    switchBackend,
+    availableBackends: AGENT_BACKEND_LIST,
   };
 }

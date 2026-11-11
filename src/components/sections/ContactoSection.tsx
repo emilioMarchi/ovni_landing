@@ -48,10 +48,10 @@ export default function ContactoSection() {
         <div className="flex flex-col items-center gap-3">
           <Badge variant="celeste">Paso 3 de 3</Badge>
           <h2 className="font-space-mono font-bold text-3xl md:text-4xl text-texto-main leading-tight">
-            Hablemos
+            Impulsemos tu proyecto
           </h2>
           <p className="font-inter text-texto-sub text-base md:text-lg max-w-md">
-            Contame qué necesitás. Podemos charlar ahora o dejás tus datos y te escribo.
+            Desarrollo de software a medida e integración de IA para sitios web y sistemas privados. Contame tu idea.
           </p>
         </div>
 
@@ -128,7 +128,7 @@ export default function ContactoSection() {
               <textarea
                 required
                 rows={3}
-                placeholder="Contame brevemente qué tipo de sistema o automatización estás buscando..."
+                placeholder="Contame brevemente tu proyecto, sitio web o sistema privado que te gustaría potenciar con IA..."
                 value={formData.consulta}
                 onChange={(e) => setFormData({ ...formData, consulta: e.target.value })}
                 className="bg-gris-oscuro border border-gris-border rounded-lg px-3 py-2.5 text-sm text-texto-main placeholder:text-texto-sub/50 focus:outline-none focus:border-celeste-muted/60 transition-colors resize-none"

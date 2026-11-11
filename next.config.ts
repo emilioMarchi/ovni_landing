@@ -8,7 +8,7 @@ const nextConfig: NextConfig = {
         headers: [
           {
             key: "Access-Control-Allow-Origin",
-            value: "https://fd4d-2803-9800-9802-b39d-74c2-6167-a632-c2d4.ngrok-free.app",
+            value: "https://7586-2803-9800-9802-b39d-dc05-3a7b-f3c7-8d74.ngrok-free.app",
           },
           {
             key: "Access-Control-Allow-Methods",
@@ -25,7 +25,7 @@ const nextConfig: NextConfig = {
   experimental: {
     serverActions: {
       allowedOrigins: [
-        "fd4d-2803-9800-9802-b39d-74c2-6167-a632-c2d4.ngrok-free.app",
+        "https://7586-2803-9800-9802-b39d-dc05-3a7b-f3c7-8d74.ngrok-free.app",
         "localhost:3000",
       ],
     },

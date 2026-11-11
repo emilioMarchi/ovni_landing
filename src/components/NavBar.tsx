@@ -54,6 +54,7 @@ export default function NavBar() {
     messages,
     sendTextMessage,
     sendAudioChunk,
+    backend,
   } = useAgentSocket();
 
   // Escuchar evento del botón "Empezar" del Hero para enviar mensaje inicial y activar el agente (sin abrir el chat)
@@ -72,6 +73,7 @@ export default function NavBar() {
 
   // Transmitir fragmentos de audio grabados hacia el backend
   useEffect(() => {
+    if (!backend.supportsVoice) return;
     if (queueItems.length > 0) {
       const item = dequeueAudio();
       if (item) {
@@ -79,7 +81,7 @@ export default function NavBar() {
         sendAudioChunk(item.id, item.blob);
       }
     }
-  }, [queueItems, dequeueAudio, sendAudioChunk, setAgentStatus]);
+  }, [queueItems, dequeueAudio, sendAudioChunk, setAgentStatus, backend.supportsVoice]);
 
   const [lastAgentMsgId, setLastAgentMsgId] = useState<string | null>(null);
   const [typewriterText, setTypewriterText] = useState('');
@@ -198,6 +200,12 @@ export default function NavBar() {
   };
 
   const handleToggleVoice = () => {
+    // La IA local no tiene STT: el microfono no tendria a quien escuchar.
+    if (!backend.supportsVoice) {
+      setIsChatOpen(true);
+      return;
+    }
+
     if (isListening) {
       stopListening();
     } else {
@@ -328,7 +336,11 @@ export default function NavBar() {
                 transition-all duration-200 cursor-pointer font-normal text-xs md:text-sm font-space-mono
                 max-w-full overflow-hidden
               "
-              title="Iniciar conversación por voz"
+              title={
+                backend.supportsVoice
+                  ? 'Iniciar conversación por voz'
+                  : 'La IA local no procesa audio. Abrir chat de texto.'
+              }
             >
               <div className="w-5 h-5 rounded-full border border-celeste-muted flex items-center justify-center shrink-0">
                 <Mic className="w-3 h-3 text-celeste-muted block" />
@@ -381,7 +393,7 @@ export default function NavBar() {
           )}
         </div>
 
-        {/* ── LADO DERECHO: Chat & Menú Hamburguesa en Mobile ── */}
+        {/* ── LADO DERECHO: Chat & Menú ── */}
         <div className="flex items-center gap-1.5 shrink-0 z-10">
           <button
             onClick={() => setIsChatOpen(!isChatOpen)}
