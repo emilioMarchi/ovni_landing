@@ -1,11 +1,20 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Play, Pause, Bot, Compass, UserCheck } from 'lucide-react';
 
 export default function ExplicacionSection() {
-  const [isPlaying, setIsPlaying] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(true);
   const videoRef = useRef<HTMLVideoElement | null>(null);
+
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.play().catch(() => {
+        // En caso de que el navegador bloquee el autoplay inicial
+        setIsPlaying(false);
+      });
+    }
+  }, []);
 
   const togglePlay = () => {
     if (!videoRef.current) return;
@@ -39,10 +48,12 @@ export default function ExplicacionSection() {
           my-auto
         "
       >
-        {/* Elemento de video HTML5 */}
+        {/* Elemento de video HTML5 con Autoplay y Mute para permitirlo en navegadores */}
         <video
           ref={videoRef}
           src="/captura-web-ia.mp4"
+          autoPlay
+          muted
           playsInline
           loop
           onPlay={() => setIsPlaying(true)}

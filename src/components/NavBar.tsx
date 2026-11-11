@@ -199,17 +199,21 @@ export default function NavBar() {
     setIsMobileMenuOpen(false);
   };
 
-  const handleToggleVoice = () => {
-    // La IA local no tiene STT: el microfono no tendria a quien escuchar.
+  const handleVoicePressStart = (e: React.SyntheticEvent) => {
+    e.preventDefault();
     if (!backend.supportsVoice) {
       setIsChatOpen(true);
       return;
     }
+    if (!isListening) {
+      startListening();
+    }
+  };
 
+  const handleVoicePressEnd = (e: React.SyntheticEvent) => {
+    e.preventDefault();
     if (isListening) {
       stopListening();
-    } else {
-      startListening();
     }
   };
 
@@ -322,47 +326,56 @@ export default function NavBar() {
           </div>
         </div>
 
-        {/* ── CENTRO EXACTO: Agente Conversacional ── */}
-        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center max-w-[160px] sm:max-w-[220px] md:max-w-[260px] pointer-events-auto z-10">
+        {/* ── CENTRO EXACTO: Agente Conversacional (Solo Mobile) ── */}
+        <div className="md:hidden absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center max-w-[170px] pointer-events-auto z-10 select-none">
           {!isListening && !isAgentActive ? (
-            /* Estado Inactivo: Botón Círculo Celeste Outline */
+            /* Estado Inactivo: Mantener presionado para hablar */
             <button
-              onClick={handleToggleVoice}
+              onMouseDown={handleVoicePressStart}
+              onMouseUp={handleVoicePressEnd}
+              onMouseLeave={handleVoicePressEnd}
+              onTouchStart={handleVoicePressStart}
+              onTouchEnd={handleVoicePressEnd}
+              onTouchCancel={handleVoicePressEnd}
               className="
                 group flex items-center justify-center gap-2
-                h-10 px-3 sm:px-4 rounded-full
+                h-10 px-3.5 rounded-full
                 border border-celeste-muted text-celeste-muted bg-transparent
+                active:bg-celeste-muted active:text-gris-oscuro
                 hover:bg-celeste-muted/10 hover:shadow-lg hover:shadow-celeste-muted/10
-                transition-all duration-200 cursor-pointer font-normal text-xs md:text-sm font-space-mono
-                max-w-full overflow-hidden
+                transition-all duration-200 cursor-pointer font-normal text-xs font-space-mono
+                max-w-full overflow-hidden select-none touch-none
               "
               title={
                 backend.supportsVoice
-                  ? 'Iniciar conversación por voz'
+                  ? 'Mantené presionado para hablar'
                   : 'La IA local no procesa audio. Abrir chat de texto.'
               }
             >
-              <div className="w-5 h-5 rounded-full border border-celeste-muted flex items-center justify-center shrink-0">
-                <Mic className="w-3 h-3 text-celeste-muted block" />
+              <div className="w-5 h-5 rounded-full border border-celeste-muted group-active:border-gris-oscuro flex items-center justify-center shrink-0">
+                <Mic className="w-3 h-3 text-celeste-muted group-active:text-gris-oscuro block" />
               </div>
-              <span className="hidden sm:inline tracking-wider uppercase leading-none truncate font-normal">
-                Conversar
+              <span className="tracking-wider uppercase leading-none truncate font-normal text-[11px]">
+                Presionar
               </span>
             </button>
           ) : isListening && !isAgentActive ? (
-            /* Estado Grabando / Escuchando Micrófono */
+            /* Estado Grabando / Escuchando Micrófono al mantener presionado */
             <button
-              onClick={handleToggleVoice}
+              onMouseUp={handleVoicePressEnd}
+              onMouseLeave={handleVoicePressEnd}
+              onTouchEnd={handleVoicePressEnd}
+              onTouchCancel={handleVoicePressEnd}
               className="
-                flex items-center justify-center gap-1.5 sm:gap-2
-                h-10 px-3 sm:px-4 rounded-full
+                flex items-center justify-center gap-1.5
+                h-10 px-3.5 rounded-full
                 bg-celeste-muted text-gris-oscuro font-normal
                 border border-celeste-muted
                 shadow-lg shadow-celeste-muted/20
-                animate-pulse cursor-pointer text-xs md:text-sm font-space-mono
-                max-w-full overflow-hidden
+                animate-pulse cursor-pointer text-xs font-space-mono
+                max-w-full overflow-hidden select-none touch-none
               "
-              title="Grabando micrófono... Clic para detener"
+              title="Grabando micrófono... Soltá para enviar"
             >
               <div
                 style={{
@@ -372,22 +385,16 @@ export default function NavBar() {
               >
                 <Mic className="w-3 h-3 text-celeste-muted block" />
               </div>
-              <span className="tracking-wider uppercase leading-none truncate max-w-[90px] sm:max-w-none font-normal">
-                Grabando...
+              <span className="tracking-wider uppercase leading-none truncate font-normal text-[11px]">
+                Soltar para enviar
               </span>
-              <MicOff className="w-3.5 h-3.5 opacity-70 shrink-0 hidden sm:inline" />
             </button>
           ) : (
             /* Estado Agente Procesando o Respondiendo */
-            <div className="flex items-center justify-center gap-2 h-10 px-3.5 sm:px-4 rounded-full bg-celeste-muted text-gris-oscuro border border-celeste-muted shadow-lg shadow-celeste-muted/20 font-space-mono max-w-full">
+            <div className="flex items-center justify-center gap-2 h-10 px-3.5 rounded-full bg-celeste-muted text-gris-oscuro border border-celeste-muted shadow-lg shadow-celeste-muted/20 font-space-mono max-w-full">
               <Loader2 className="w-4 h-4 animate-spin text-gris-oscuro shrink-0" />
-              <span className="tracking-wider uppercase text-xs sm:text-sm font-normal truncate">
+              <span className="tracking-wider uppercase text-xs font-normal truncate">
                 {agentStatus === 'processing' ? 'Procesando' : 'Respondiendo'}
-              </span>
-              <span className="flex items-center gap-0.5">
-                <span className="w-1 h-1 rounded-full bg-gris-oscuro animate-bounce [animation-delay:-0.3s]" />
-                <span className="w-1 h-1 rounded-full bg-gris-oscuro animate-bounce [animation-delay:-0.15s]" />
-                <span className="w-1 h-1 rounded-full bg-gris-oscuro animate-bounce" />
               </span>
             </div>
           )}

@@ -84,7 +84,12 @@ export const ChatModal: React.FC<ChatModalProps> = ({
         </div>
 
         {/* Cuerpo con lista de mensajes */}
-        <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-3">
+        <div
+          data-lenis-prevent
+          onWheel={(e) => e.stopPropagation()}
+          onTouchMove={(e) => e.stopPropagation()}
+          className="flex-1 overflow-y-auto p-4 flex flex-col gap-3 overscroll-contain"
+        >
           {messages.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full text-center text-texto-sub gap-2">
               <Bot className="w-8 h-8 text-celeste-muted/60" />

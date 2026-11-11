@@ -28,6 +28,12 @@ export default function Home() {
   useEffect(() => {
     // ── Interceptar Rueda del Ratón (Wheel) ──
     const handleWheel = (e: WheelEvent) => {
+      // Si el evento ocurrió dentro de un modal o elemento con scroll propio (como el Chat)
+      const target = e.target as HTMLElement | null;
+      if (target && target.closest('[data-lenis-prevent], .overflow-y-auto, .fixed')) {
+        return;
+      }
+
       e.preventDefault();
       if (isScrollingRef.current) return;
 
@@ -44,10 +50,18 @@ export default function Home() {
     };
 
     const handleTouchMove = (e: TouchEvent) => {
+      const target = e.target as HTMLElement | null;
+      if (target && target.closest('[data-lenis-prevent], .overflow-y-auto, .fixed')) {
+        return;
+      }
       e.preventDefault();
     };
 
     const handleTouchEnd = (e: TouchEvent) => {
+      const target = e.target as HTMLElement | null;
+      if (target && target.closest('[data-lenis-prevent], .overflow-y-auto, .fixed')) {
+        return;
+      }
       if (isScrollingRef.current) return;
       const touchEndY = e.changedTouches[0].clientY;
       const diffY = touchStartYRef.current - touchEndY;
