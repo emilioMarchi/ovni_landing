@@ -26,6 +26,8 @@ type Section = {
 const SECTIONS: Section[] = [
   { id: 'hero', label: 'Inicio' },
   { id: 'explicacion', label: 'Cómo funciona' },
+  { id: 'resultados', label: 'Resultados' },
+  { id: 'modelo', label: 'Modelo de Trabajo' },
   { id: 'contacto', label: 'Contacto' },
 ];
 
@@ -53,23 +55,41 @@ export default function NavBar() {
     setAgentStatus,
     messages,
     sendTextMessage,
+    retrySendMessage,
     sendAudioChunk,
+    connectionState,
     backend,
   } = useAgentSocket();
 
-  // Escuchar evento del botón "Empezar" del Hero para enviar mensaje inicial y activar el agente (sin abrir el chat)
+  // Escuchar evento del boton "Contactar a Eva" del Hero para enviar mensaje inicial y abrir el chat
   useEffect(() => {
     const handleStartGreeting = (e: CustomEvent<{ message?: string }>) => {
       const initialText = e.detail?.message || 'Hola';
       setAgentStatus('processing');
       sendTextMessage(initialText);
+      setIsChatOpen(true);
     };
 
     window.addEventListener('startAgentGreeting' as any, handleStartGreeting);
     return () => {
       window.removeEventListener('startAgentGreeting' as any, handleStartGreeting);
     };
-  }, [sendTextMessage, setAgentStatus]);
+  }, [sendTextMessage, setAgentStatus, setIsChatOpen]);
+
+  // Abrir chat y enviar mensaje predefinido desde la seccion Contacto (boton Agente)
+  useEffect(() => {
+    const handleAbrirChatAgente = (e: CustomEvent<{ mensaje?: string }>) => {
+      if (e.detail?.mensaje) {
+        sendTextMessage(e.detail.mensaje);
+      }
+      setIsChatOpen(true);
+    };
+
+    window.addEventListener('abrir-chat-agente' as any, handleAbrirChatAgente);
+    return () => {
+      window.removeEventListener('abrir-chat-agente' as any, handleAbrirChatAgente);
+    };
+  }, [sendTextMessage, setIsChatOpen]);
 
   // Transmitir fragmentos de audio grabados hacia el backend
   useEffect(() => {
@@ -141,6 +161,16 @@ export default function NavBar() {
 
     return () => clearInterval(interval);
   }, [currentSentence, typewriterText]);
+
+  // Limpiar frases pendientes cuando el chat se abre, para que al cerrarlo
+  // no reaparezcan mensajes que el usuario ya leyó dentro del chat.
+  useEffect(() => {
+    if (isChatOpen) {
+      setCurrentSentence(null);
+      setActiveSentences([]);
+      setSentenceIndex(0);
+    }
+  }, [isChatOpen]);
 
   // Temporizador dinámico para pasar a la siguiente frase (solo inicia al terminar de teclear)
   useEffect(() => {
@@ -477,7 +507,9 @@ export default function NavBar() {
         onClose={() => setIsChatOpen(false)}
         messages={messages}
         onSendMessage={sendTextMessage}
+        onRetryMessage={retrySendMessage}
         agentStatus={agentStatus}
+        connectionState={connectionState}
       />
     </>
   );

@@ -1,31 +1,18 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
-import { Play, Pause, Bot, Compass, UserCheck } from 'lucide-react';
+import { useRef, useEffect } from 'react';
+import { Bot, Compass, UserCheck } from 'lucide-react';
 
 export default function ExplicacionSection() {
-  const [isPlaying, setIsPlaying] = useState(true);
   const videoRef = useRef<HTMLVideoElement | null>(null);
 
   useEffect(() => {
     if (videoRef.current) {
       videoRef.current.play().catch(() => {
         // En caso de que el navegador bloquee el autoplay inicial
-        setIsPlaying(false);
       });
     }
   }, []);
-
-  const togglePlay = () => {
-    if (!videoRef.current) return;
-    if (isPlaying) {
-      videoRef.current.pause();
-      setIsPlaying(false);
-    } else {
-      videoRef.current.play();
-      setIsPlaying(true);
-    }
-  };
 
   return (
     <section
@@ -39,12 +26,11 @@ export default function ExplicacionSection() {
     >
       {/* ── ÁREA DE VIDEO DE EXTREMO A EXTREMO ── */}
       <div
-        onClick={togglePlay}
         className="
           relative w-full flex-1
           bg-gris-surface border-y border-gris-border
           flex items-center justify-center
-          overflow-hidden group cursor-pointer
+          overflow-hidden
           my-auto
         "
       >
@@ -56,42 +42,8 @@ export default function ExplicacionSection() {
           muted
           playsInline
           loop
-          onPlay={() => setIsPlaying(true)}
-          onPause={() => setIsPlaying(false)}
-          className="w-full h-full object-contain md:object-cover"
+          className="max-w-full max-h-full"
         />
-
-        {/* Overlay con controles y título cuando está pausado o en hover */}
-        <div
-          className={`
-            absolute inset-0 bg-black/40 flex flex-col items-center justify-center transition-opacity duration-300
-            ${isPlaying ? 'opacity-0 group-hover:opacity-100' : 'opacity-100'}
-          `}
-        >
-          {/* Botón central Play / Pause */}
-          <div className="flex flex-col items-center gap-3">
-            <div
-              className="
-                flex items-center justify-center
-                w-16 h-16 md:w-20 md:h-20 rounded-full
-                bg-celeste-muted/20 border border-celeste-muted/40 backdrop-blur-sm
-                group-hover:bg-celeste-muted/30 group-hover:scale-110 group-hover:border-celeste-muted
-                transition-all duration-300 shadow-2xl shadow-celeste-muted/20
-              "
-            >
-              {isPlaying ? (
-                <Pause className="w-7 h-7 md:w-8 md:h-8 text-celeste-muted fill-celeste-muted" />
-              ) : (
-                <Play className="w-7 h-7 md:w-8 md:h-8 text-celeste-muted fill-celeste-muted ml-1" />
-              )}
-            </div>
-            {!isPlaying && (
-              <span className="font-space-mono text-xs md:text-sm text-texto-main/90 font-medium tracking-wide drop-shadow-md">
-                Ver Demo: Concesionario Inteligente
-              </span>
-            )}
-          </div>
-        </div>
 
         {/* Indicador inferior dentro del video */}
         <p className="absolute bottom-3 left-6 font-space-mono text-[10px] md:text-xs text-texto-sub/80 uppercase tracking-widest pointer-events-none drop-shadow">

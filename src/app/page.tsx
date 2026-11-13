@@ -4,9 +4,11 @@ import { useEffect, useRef, useState, useCallback } from 'react';
 import NavBar from '@/components/NavBar';
 import HeroSection from '@/components/sections/HeroSection';
 import ExplicacionSection from '@/components/sections/ExplicacionSection';
+import ResultadosSection from '@/components/sections/ResultadosSection';
+import ModeloTrabajoSection from '@/components/sections/ModeloTrabajoSection';
 import ContactoSection from '@/components/sections/ContactoSection';
 
-const SECTION_IDS = ['hero', 'explicacion', 'contacto'];
+const SECTION_IDS = ['hero', 'explicacion', 'resultados', 'modelo', 'contacto'];
 
 export default function Home() {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -140,6 +142,8 @@ export default function Home() {
       >
         <HeroSection />
         <ExplicacionSection />
+        <ResultadosSection />
+        <ModeloTrabajoSection />
         <ContactoSection />
       </main>
     </div>

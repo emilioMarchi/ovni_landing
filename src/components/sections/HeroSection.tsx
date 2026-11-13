@@ -1,22 +1,15 @@
 'use client';
 
 import { Button } from '@/components/ui/Button';
+import RotatingText from '@/components/ui/RotatingText';
 
 export default function HeroSection() {
   const handleConversar = () => {
     window.dispatchEvent(
       new CustomEvent('startAgentGreeting', {
-        detail: { message: 'Hola' }
+        detail: { message: 'Hola, me gustaría saber más sobre la integración de IA en mi negocio' }
       })
     );
-  };
-
-  const handleVideo = () => {
-    window.dispatchEvent(new CustomEvent('navScrollTo', { detail: { id: 'explicacion' } }));
-  };
-
-  const handleContacto = () => {
-    window.dispatchEvent(new CustomEvent('navScrollTo', { detail: { id: 'contacto' } }));
   };
 
   return (
@@ -38,72 +31,27 @@ export default function HeroSection() {
       {/* Contenido principal */}
       <div className="relative z-10 flex flex-col items-center text-center max-w-4xl gap-8">
 
-        {/* DESARROLLO DE SOFTWARE & IA A MEDIDA */}
-        <p className="font-space-mono text-sm md:text-base lg:text-lg font-bold tracking-[0.25em] uppercase text-celeste-muted">
-          DESARROLLO DE SOFTWARE & IA A MEDIDA
-        </p>
-
-        {/* Título principal */}
-        <h1 className="font-space-mono font-normal text-3xl sm:text-4xl md:text-5xl lg:text-6xl leading-[1.05] tracking-tight text-texto-main">
-          Te convenzo en{' '}
-          <span className="text-celeste-muted font-medium">3 pasos</span>{' '}
-          de integrar IA en tu sitio web y sistemas privados.
-        </h1>
-
-        {/* ── ITEMS FLOTANTES SECUENCIALES (Texto solo más grande sin container) ── */}
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8 my-2">
-          
-          {/* Item 1: - Conversá con EVA */}
-          <button
-            onClick={handleConversar}
-            style={{ animationDelay: '400ms' }}
-            className="
-              group flex items-center gap-2
-              text-texto-main hover:text-celeste-muted bg-transparent border-none
-              font-space-mono text-base md:text-xl lg:text-2xl tracking-wide transition-all duration-300
-              animate-fadeIn opacity-0 [animation-fill-mode:forwards] cursor-pointer
-            "
-          >
-            <span className="text-celeste-muted font-bold group-hover:scale-125 transition-transform">-</span>
-            <span>Conversá con EVA</span>
-          </button>
-
-          {/* Item 2: - Mirá el video */}
-          <button
-            onClick={handleVideo}
-            style={{ animationDelay: '800ms' }}
-            className="
-              group flex items-center gap-2
-              text-texto-main hover:text-amarillo-muted bg-transparent border-none
-              font-space-mono text-base md:text-xl lg:text-2xl tracking-wide transition-all duration-300
-              animate-fadeIn opacity-0 [animation-fill-mode:forwards] cursor-pointer
-            "
-          >
-            <span className="text-amarillo-muted font-bold group-hover:scale-125 transition-transform">-</span>
-            <span>Mirá el video</span>
-          </button>
-
-          {/* Item 3: - Contactame */}
-          <button
-            onClick={handleContacto}
-            style={{ animationDelay: '1200ms' }}
-            className="
-              group flex items-center gap-2
-              text-texto-main hover:text-celeste-muted bg-transparent border-none
-              font-space-mono text-base md:text-xl lg:text-2xl tracking-wide transition-all duration-300
-              animate-fadeIn opacity-0 [animation-fill-mode:forwards] cursor-pointer
-            "
-          >
-            <span className="text-celeste-muted font-bold group-hover:scale-125 transition-transform">-</span>
-            <span>Contactame</span>
-          </button>
-
+        {/* Título rotativo: soluciones / dolor */}
+        <div className="w-full min-h-[6rem] md:min-h-[8rem] flex items-center justify-center text-center">
+          <RotatingText
+            phrases={[
+              'Transformá la fricción operativa de tu negocio en sistemas autónomos y rentables.',
+              'Convertí tu tráfico en agenda con un calificador de leads 24/7.',
+              'Eliminá los leads fríos. Que tu sistema venda mientras dormís.',
+              'Llevá IA autónoma a tu proyecto: concesionarias, clínicas o inmobiliarias.',
+              'Entrená una IA con tu negocio. Setup inicial + fee mensual.',
+            ]}
+            className="w-full font-space-mono font-normal text-4xl sm:text-5xl md:text-6xl leading-[1.05] tracking-tight text-texto-main break-words"
+            writeSpeed={45}
+            pauseBetween={2200}
+            showCursor
+          />
         </div>
 
-        {/* ── ÚNICO CTA: "Empezar" (Aparece al final tras los items) ── */}
+        {/* ── ÚNICO CTA: "Contactar a Eva" ── */}
         <div
           style={{ animationDelay: '1600ms' }}
-          className="animate-fadeIn opacity-0 [animation-fill-mode:forwards] mt-2"
+          className="animate-fadeIn opacity-0 [animation-fill-mode:forwards] mt-8"
         >
           <Button
             size="lg"
@@ -111,7 +59,7 @@ export default function HeroSection() {
             className="font-space-mono text-base md:text-lg px-8 py-4 shadow-xl hover:scale-105 transition-transform"
             onClick={handleConversar}
           >
-            Empezar
+            Contactar a Eva
           </Button>
         </div>
 

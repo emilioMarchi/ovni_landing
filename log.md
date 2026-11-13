@@ -1,49 +1,32 @@
-# Configuración WebSocket para ovni-agent y la Landing
-
----
-
-## 1. Archivo `.env.local` en la Landing (`/var/www/ovni_landing/.env.local`)
-
-```env
-# URL segura del WebSocket hacia tu backend
-NEXT_PUBLIC_AGENT_SERVER_URL=wss://api.ovnistudio.com.ar/ws
-
-# Backend remoto (ovni-agent en producción)
-NEXT_PUBLIC_AGENT_BACKEND=remote
-
-# Desactivar el mock para conectar con el agente real
-NEXT_PUBLIC_USE_MOCK_AGENT=false
-
-# Puerto para no chocar con web-ia (que usa el 3000)
-PORT=3001
-```
-
-*(Nota: Recordá hacer `npm run build` y `pm2 restart ecosystem.config.cjs` tras crear o editar `.env.local`).*
-
----
-
-## 2. Bloque en Nginx para `api.ovnistudio.com.ar` (VPS)
-
-En `/etc/nginx/sites-available/api.ovnistudio.com.ar` (o `ovni-agent`), dentro del bloque `server { ... }`, agregá este bloque antes de `location /`:
-
-```nginx
-    # Soporte WebSocket para el agente (/ws y /ws/agent)
-    location ~* ^/ws(/.*)?$ {
-        proxy_pass http://127.0.0.1:8080;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection "upgrade";
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-        proxy_read_timeout 86400s;
-        proxy_send_timeout 86400s;
-    }
-```
-
-Luego comprobá y recargá Nginx:
-```bash
-sudo nginx -t
-sudo systemctl reload nginx
-```
+47 |       setCurrentText(currentPhrase.slice(0, nextChar));
+     |       ^
+  48 |       setCharIndex(nextChar);
+  49 |       timerRef.current = setTimeout(
+  50 |         () => {}, (src/components/ui/RotatingText.tsx:47:7)
+[browser] Maximum update depth exceeded. This can happen when a component calls setState inside useEffect, but useEffect either doesn't have a dependency array, or one of the dependencies changes on every render.
+    at RotatingText.useEffect (src/components/ui/RotatingText.tsx:47:7)
+  45 |     } else {
+  46 |       const nextChar = isDeleting ? charIndex - 1 : charIndex + 1;
+> 47 |       setCurrentText(currentPhrase.slice(0, nextChar));
+     |       ^
+  48 |       setCharIndex(nextChar);
+  49 |       timerRef.current = setTimeout(
+  50 |         () => {}, (src/components/ui/RotatingText.tsx:47:7)
+[browser] Maximum update depth exceeded. This can happen when a component calls setState inside useEffect, but useEffect either doesn't have a dependency array, or one of the dependencies changes on every render.
+    at RotatingText.useEffect (src/components/ui/RotatingText.tsx:47:7)
+  45 |     } else {
+  46 |       const nextChar = isDeleting ? charIndex - 1 : charIndex + 1;
+> 47 |       setCurrentText(currentPhrase.slice(0, nextChar));
+     |       ^
+  48 |       setCharIndex(nextChar);
+  49 |       timerRef.current = setTimeout(
+  50 |         () => {}, (src/components/ui/RotatingText.tsx:47:7)
+[browser] Maximum update depth exceeded. This can happen when a component calls setState inside useEffect, but useEffect either doesn't have a dependency array, or one of the dependencies changes on every render.
+    at RotatingText.useEffect (src/components/ui/RotatingText.tsx:47:7)
+  45 |     } else {
+  46 |       const nextChar = isDeleting ? charIndex - 1 : charIndex + 1;
+> 47 |       setCurrentText(currentPhrase.slice(0, nextChar));
+     |       ^
+  48 |       setCharIndex(nextChar);
+  49 |       timerRef.current = setTimeout(
+  50 |         () => {}, (src/components/ui/RotatingText.tsx:47:7)

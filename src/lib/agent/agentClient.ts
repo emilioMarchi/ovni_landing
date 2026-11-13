@@ -9,6 +9,9 @@ import {
   DEFAULT_BACKEND_ID,
 } from './agentBackends';
 
+const MAX_RETRIES = 5;
+const RETRY_BASE_MS = 1500; // primer reintento a los 1.5s
+
 export class AgentClient {
   private ws: WebSocket | null = null;
   private mockServer: MockAgentServer | null = null;
@@ -17,6 +20,14 @@ export class AgentClient {
   private onMessageCallbacks: Set<(msg: ServerMessage) => void> = new Set();
   private isMockMode = false;
   private backendId: AgentBackendId = DEFAULT_BACKEND_ID;
+
+  /** Cola de mensajes de texto que no pudieron enviarse */
+  private pendingTexts: string[] = [];
+
+  /** Control de reconexión automática */
+  private retryCount = 0;
+  private retryTimer: ReturnType<typeof setTimeout> | null = null;
+  private shouldReconnect = true; // false solo cuando el usuario llama disconnect()
 
   constructor() {
     this.isMockMode = process.env.NEXT_PUBLIC_USE_MOCK_AGENT === 'true';
@@ -37,10 +48,14 @@ export class AgentClient {
   public setBackend(id: AgentBackendId): void {
     if (id === this.backendId) return;
     this.backendId = id;
+    this.pendingTexts = [];
 
     const wasActive = this.connectionState !== 'disconnected';
     this.disconnect();
-    if (wasActive) this.connect();
+    if (wasActive) {
+      this.shouldReconnect = true;
+      this.connect();
+    }
   }
 
   public connect(): void {
@@ -48,6 +63,7 @@ export class AgentClient {
       return;
     }
 
+    this.cancelRetry();
     this.setConnectionState('connecting');
 
     if (this.isMockMode) {
@@ -56,6 +72,7 @@ export class AgentClient {
       });
       setTimeout(() => {
         this.setConnectionState('connected');
+        this.flushPending();
       }, 300);
       return;
     }
@@ -68,7 +85,9 @@ export class AgentClient {
 
       this.ws.onopen = () => {
         console.log('[AgentClient] Conexión establecida con éxito');
+        this.retryCount = 0;
         this.setConnectionState('connected');
+        this.flushPending();
       };
 
       this.ws.onmessage = (event) => {
@@ -87,17 +106,27 @@ export class AgentClient {
         this.setConnectionState('error');
       };
 
-      this.ws.onclose = () => {
-        console.log('[AgentClient] Conexión WebSocket cerrada');
-        this.setConnectionState('disconnected');
+      this.ws.onclose = (ev) => {
+        console.log(`[AgentClient] Conexión WebSocket cerrada (code=${ev.code})`);
+        this.ws = null;
+
+        if (this.shouldReconnect) {
+          this.scheduleRetry();
+        } else {
+          this.setConnectionState('disconnected');
+        }
       };
     } catch (err) {
       console.error('Error al inicializar WebSocket:', err);
       this.setConnectionState('error');
+      if (this.shouldReconnect) this.scheduleRetry();
     }
   }
 
   public disconnect(): void {
+    this.shouldReconnect = false;
+    this.cancelRetry();
+
     if (this.ws) {
       this.ws.onclose = null;
       this.ws.close();
@@ -107,17 +136,29 @@ export class AgentClient {
     this.setConnectionState('disconnected');
   }
 
-  public sendText(text: string): void {
+  /**
+   * Envía texto al agente. Si el WS no está abierto, encola el mensaje
+   * y retorna false para que la UI muestre el estado de error.
+   */
+  public sendText(text: string): boolean {
     if (this.isMockMode && this.mockServer) {
       this.mockServer.processTextMessage(text);
-      return;
+      return true;
     }
 
     if (this.ws && this.ws.readyState === WebSocket.OPEN) {
       const payload = { type: 'text', content: text };
       this.ws.send(JSON.stringify(payload));
+      return true;
     } else {
-      console.warn('[AgentClient] Intentando enviar mensaje pero WebSocket no está abierto');
+      console.warn('[AgentClient] WS no está abierto — encolando mensaje:', text);
+      this.pendingTexts.push(text);
+      // Intentar reconectar si estamos desconectados
+      if (this.connectionState === 'disconnected' || this.connectionState === 'error') {
+        this.shouldReconnect = true;
+        this.connect();
+      }
+      return false;
     }
   }
 
@@ -150,6 +191,43 @@ export class AgentClient {
 
   private emitMessage(msg: ServerMessage): void {
     this.onMessageCallbacks.forEach((cb) => cb(msg));
+  }
+
+  /** Envía los mensajes encolados durante una desconexión */
+  private flushPending(): void {
+    if (this.pendingTexts.length === 0) return;
+    const toSend = [...this.pendingTexts];
+    this.pendingTexts = [];
+    console.log(`[AgentClient] Enviando ${toSend.length} mensaje(s) encolado(s)`);
+    for (const text of toSend) {
+      this.sendText(text);
+    }
+  }
+
+  private scheduleRetry(): void {
+    if (this.retryCount >= MAX_RETRIES) {
+      console.warn('[AgentClient] Máximo de reintentos alcanzado');
+      this.setConnectionState('error');
+      return;
+    }
+
+    // Backoff exponencial: 1.5s, 3s, 6s, 12s, 24s
+    const delay = RETRY_BASE_MS * Math.pow(2, this.retryCount);
+    this.retryCount++;
+    console.log(`[AgentClient] Reintentando conexión en ${delay}ms (intento ${this.retryCount}/${MAX_RETRIES})`);
+
+    this.setConnectionState('connecting');
+    this.retryTimer = setTimeout(() => {
+      this.connect();
+    }, delay);
+  }
+
+  private cancelRetry(): void {
+    if (this.retryTimer !== null) {
+      clearTimeout(this.retryTimer);
+      this.retryTimer = null;
+    }
+    this.retryCount = 0;
   }
 
   public get state(): ConnectionState {

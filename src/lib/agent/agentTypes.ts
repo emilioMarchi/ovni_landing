@@ -6,6 +6,9 @@ export type ConnectionState = 'disconnected' | 'connecting' | 'connected' | 'err
 
 export type AgentMode = 'voice' | 'chat';
 
+/** Estado de envío de un mensaje del usuario */
+export type MessageStatus = 'sending' | 'sent' | 'failed';
+
 export interface ChatMessage {
   id: string;
   sender: 'user' | 'agent';
@@ -14,6 +17,8 @@ export interface ChatMessage {
   timestamp: number;
   audioUrl?: string;
   isStreaming?: boolean;
+  /** Solo para mensajes de usuario: estado de envío al servidor */
+  status?: MessageStatus;
 }
 
 export interface AgentServerConfig {
