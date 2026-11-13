@@ -162,14 +162,16 @@ export default function NavBar() {
     return () => clearInterval(interval);
   }, [currentSentence, typewriterText]);
 
-  // Limpiar frases pendientes cuando el chat se abre, para que al cerrarlo
-  // no reaparezcan mensajes que el usuario ya leyó dentro del chat.
+  // Limpiar el popup flotante de frases tanto al abrir como al cerrar el chat,
+  // para que los mensajes que el usuario ya vio dentro del chat no se vuelvan
+  // a renderizar con el efecto typewriter al cerrar el panel.
   useEffect(() => {
-    if (isChatOpen) {
-      setCurrentSentence(null);
-      setActiveSentences([]);
-      setSentenceIndex(0);
-    }
+    setCurrentSentence(null);
+    setActiveSentences([]);
+    setSentenceIndex(0);
+    setLastAgentMsgId(null);
+    setTypewriterText('');
+    setIsTyping(false);
   }, [isChatOpen]);
 
   // Temporizador dinámico para pasar a la siguiente frase (solo inicia al terminar de teclear)
