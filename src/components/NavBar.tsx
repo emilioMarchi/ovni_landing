@@ -107,9 +107,13 @@ export default function NavBar() {
   const [typewriterText, setTypewriterText] = useState('');
   const [isTyping, setIsTyping] = useState(false);
 
-  // Capturar nuevos mensajes del agente y armar la secuencia de frases
+  // Capturar nuevos mensajes del agente y armar la secuencia de frases.
+  // Solo se activa el popup typewriter cuando el chat está cerrado:
+  // si el chat está abierto, el usuario ya ve el mensaje dentro del chat,
+  // por lo que no debe reaparecer en el popup al cerrar.
   useEffect(() => {
     if (messages.length === 0) return;
+    if (isChatOpen) return;
     const lastMsg = messages[messages.length - 1];
 
     if (lastMsg.sender === 'agent') {
@@ -128,7 +132,7 @@ export default function NavBar() {
         setCurrentSentence(sentencesToPlay[sentenceIndex] || sentencesToPlay[0]);
       }
     }
-  }, [messages, lastAgentMsgId, sentenceIndex]);
+  }, [messages, lastAgentMsgId, sentenceIndex, isChatOpen]);
 
   // Efecto máquina de escribir (Typewriter / Streaming) para la frase actual
   useEffect(() => {
