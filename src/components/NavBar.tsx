@@ -265,8 +265,9 @@ export default function NavBar() {
             fixed z-50 left-1/2 -translate-x-1/2 transition-all duration-500 ease-out
             bottom-20 md:bottom-auto md:top-20
             w-[90%] max-w-lg
-            pointer-events-none animate-fadeIn
+            pointer-events-auto animate-fadeIn cursor-pointer hover:bg-gris-surface/95 transition-colors
           "
+          onClick={() => setIsChatOpen(true)}
         >
           <div
             className="
