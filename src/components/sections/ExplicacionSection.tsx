@@ -58,7 +58,7 @@ export default function ExplicacionSection() {
       className="
         snap-start relative flex flex-col justify-between
         h-dvh w-full
-        bg-gris-oscuro overflow-hidden
+        bg-transparent overflow-hidden
         pt-16 md:pt-20 pb-20 md:pb-8
       "
     >

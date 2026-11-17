@@ -30,7 +30,7 @@ export default function ModeloTrabajoSection() {
       className="
         snap-start relative flex flex-col items-center justify-center
         h-dvh w-full
-        bg-gris-oscuro overflow-hidden
+        bg-transparent overflow-hidden
         px-4 sm:px-6 md:px-12 pt-14 md:pt-20 pb-8 md:pb-12
       "
     >

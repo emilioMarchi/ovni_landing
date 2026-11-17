@@ -60,16 +60,10 @@ export default function HeroSection() {
       className="
         snap-start relative flex flex-col items-center justify-center
         h-dvh w-full
-        bg-gris-oscuro overflow-hidden
+        bg-transparent overflow-hidden
         px-6 md:px-16
       "
     >
-      {/* Gradiente de fondo sutil */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[600px] rounded-full bg-celeste-muted/5 blur-3xl" />
-        <div className="absolute bottom-0 right-0 w-[300px] h-[300px] rounded-full bg-amarillo-muted/5 blur-3xl" />
-      </div>
-
       {/* Contenido principal */}
       <div className="relative z-10 flex flex-col items-center text-center max-w-4xl gap-6 md:gap-8">
 

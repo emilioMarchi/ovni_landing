@@ -56,15 +56,10 @@ export default function ResultadosSection() {
       className="
         snap-start relative flex flex-col items-center justify-center
         h-dvh w-full
-        bg-gris-oscuro overflow-hidden
+        bg-transparent overflow-hidden
         px-4 sm:px-6 md:px-12 pt-14 md:pt-20 pb-8 md:pb-12
       "
     >
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-1/3 left-1/4 w-[500px] h-[500px] rounded-full bg-celeste-muted/6 blur-[120px]" />
-        <div className="absolute bottom-1/4 right-1/5 w-[400px] h-[400px] rounded-full bg-amarillo-muted/6 blur-[100px]" />
-      </div>
-
       <div className="relative z-10 w-full max-w-6xl text-center flex flex-col items-center">
         {/* Encabezado */}
         <div className="flex flex-col items-center gap-2 md:gap-4 mb-4 md:mb-10">
