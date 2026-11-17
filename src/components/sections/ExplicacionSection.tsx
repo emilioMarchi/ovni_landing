@@ -79,7 +79,7 @@ export default function ExplicacionSection() {
           muted
           playsInline
           loop
-          preload="auto"
+          preload="none"
           className="max-w-full max-h-full"
         />
 
