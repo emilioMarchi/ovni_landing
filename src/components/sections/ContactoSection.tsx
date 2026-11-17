@@ -37,12 +37,12 @@ export default function ContactoSection() {
       <div className="relative z-10 flex flex-col items-center text-center gap-8 max-w-2xl w-full">
 
         <div className="flex flex-col items-center gap-3">
-          <Badge variant="celeste">Paso 3 de 3</Badge>
+          <Badge variant="celeste">Contacto directo</Badge>
           <h2 className="font-space-mono font-bold text-3xl md:text-4xl text-texto-main leading-tight">
-            Impulsemos tu proyecto
+            Hablemos de tu proyecto
           </h2>
           <p className="font-inter text-texto-sub text-base md:text-lg max-w-md">
-            Desarrollo de software a medida e integracion de IA para sitios web y sistemas privados. Contame tu idea.
+            Desarrollo de software a medida e integración de IA para sitios web y sistemas privados.
           </p>
         </div>
 

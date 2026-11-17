@@ -1,7 +1,49 @@
 'use client';
 
 import { Button } from '@/components/ui/Button';
-import RotatingText from '@/components/ui/RotatingText';
+import RotatingText, { RotatingHeaderItem, HighlightText } from '@/components/ui/RotatingText';
+
+const HERO_ITEMS: RotatingHeaderItem[] = [
+  {
+    title: (
+      <>
+        WEB <HighlightText color="celeste">INTELIGENTE</HighlightText>
+      </>
+    ),
+    subtitle: (
+      <>
+        Responde <HighlightText color="celeste" variant="subtitle">24/7</HighlightText>, navega{' '}
+        <HighlightText color="celeste" variant="subtitle">automáticamente</HighlightText>, guarda{' '}
+        <HighlightText color="celeste" variant="subtitle">leads calificados</HighlightText>
+      </>
+    ),
+  },
+  {
+    title: (
+      <>
+        AGENTE <HighlightText color="amarillo">IA INTEGRADO</HighlightText>
+      </>
+    ),
+    subtitle: (
+      <>
+        Se conecta con la <HighlightText color="amarillo" variant="subtitle">info de tu proyecto</HighlightText>
+      </>
+    ),
+  },
+  {
+    title: (
+      <>
+        SISTEMAS <HighlightText color="celeste">HÍBRIDOS</HighlightText>
+      </>
+    ),
+    subtitle: (
+      <>
+        Servidor en la <HighlightText color="celeste" variant="subtitle">nube o local</HighlightText>, IA en la{' '}
+        <HighlightText color="celeste" variant="subtitle">nube o local</HighlightText>
+      </>
+    ),
+  },
+];
 
 export default function HeroSection() {
   const handleConversar = () => {
@@ -29,30 +71,19 @@ export default function HeroSection() {
       </div>
 
       {/* Contenido principal */}
-      <div className="relative z-10 flex flex-col items-center text-center max-w-4xl gap-8">
+      <div className="relative z-10 flex flex-col items-center text-center max-w-4xl gap-6 md:gap-8">
 
-        {/* Título rotativo: soluciones / dolor */}
-        <div className="w-full min-h-[6rem] md:min-h-[8rem] flex items-center justify-center text-center">
+        {/* Título rotativo renglón por renglón con subtítulo */}
+        <div className="w-full min-h-[7.5rem] sm:min-h-[9rem] md:min-h-[10rem] flex items-center justify-center text-center">
           <RotatingText
-            phrases={[
-              'Transformá la fricción operativa de tu negocio en sistemas autónomos y rentables.',
-              'Convertí tu tráfico en agenda con un calificador de leads 24/7.',
-              'Eliminá los leads fríos. Que tu sistema venda mientras dormís.',
-              'Llevá IA autónoma a tu proyecto: concesionarias, clínicas o inmobiliarias.',
-              'Entrená una IA con tu negocio. Setup inicial + fee mensual.',
-            ]}
-            className="w-full font-space-mono font-normal text-4xl sm:text-5xl md:text-6xl leading-[1.05] tracking-tight text-texto-main break-words"
-            writeSpeed={45}
-            pauseBetween={2200}
-            showCursor
+            items={HERO_ITEMS}
+            displayDuration={3800}
+            className="w-full"
           />
         </div>
 
         {/* ── ÚNICO CTA: "Contactar a Eva" ── */}
-        <div
-          style={{ animationDelay: '1600ms' }}
-          className="animate-fadeIn opacity-0 [animation-fill-mode:forwards] mt-8"
-        >
+        <div className="mt-2 md:mt-4">
           <Button
             size="lg"
             variant="primary"

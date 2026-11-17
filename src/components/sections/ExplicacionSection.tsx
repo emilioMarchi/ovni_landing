@@ -4,18 +4,56 @@ import { useRef, useEffect } from 'react';
 import { Bot, Compass, UserCheck } from 'lucide-react';
 
 export default function ExplicacionSection() {
+  const sectionRef = useRef<HTMLElement | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
+  const hasWatched10sRef = useRef(false);
 
   useEffect(() => {
-    if (videoRef.current) {
-      videoRef.current.play().catch(() => {
-        // En caso de que el navegador bloquee el autoplay inicial
-      });
-    }
+    const sectionEl = sectionRef.current;
+    const videoEl = videoRef.current;
+    if (!sectionEl || !videoEl) return;
+
+    // Registrar si el usuario ya vio más de 10 segundos del video
+    const handleTimeUpdate = () => {
+      if (videoEl.currentTime >= 10) {
+        hasWatched10sRef.current = true;
+      }
+    };
+
+    videoEl.addEventListener('timeupdate', handleTimeUpdate);
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          // Si todavía no vio al menos 10 segundos, se reinicia al principio;
+          // si ya vio más de 10 segundos, continúa desde donde quedó sin resetear.
+          if (!hasWatched10sRef.current) {
+            videoEl.currentTime = 0;
+          }
+          videoEl.play().catch(() => {
+            // Autoplay permitido en videos muted
+          });
+        } else {
+          // Pausar cuando la sección sale de la pantalla
+          videoEl.pause();
+        }
+      },
+      {
+        threshold: 0.25, // Se activa cuando al menos el 25% de la sección es visible
+      }
+    );
+
+    observer.observe(sectionEl);
+
+    return () => {
+      videoEl.removeEventListener('timeupdate', handleTimeUpdate);
+      observer.disconnect();
+    };
   }, []);
 
   return (
     <section
+      ref={sectionRef}
       id="explicacion"
       className="
         snap-start relative flex flex-col justify-between
@@ -34,14 +72,14 @@ export default function ExplicacionSection() {
           my-auto
         "
       >
-        {/* Elemento de video HTML5 con Autoplay y Mute para permitirlo en navegadores */}
+        {/* Elemento de video HTML5 reproducido automáticamente al visualizarse */}
         <video
           ref={videoRef}
           src="/captura-web-ia.mp4"
-          autoPlay
           muted
           playsInline
           loop
+          preload="auto"
           className="max-w-full max-h-full"
         />
 
