@@ -28,6 +28,7 @@ const SECTIONS: Section[] = [
   { id: 'explicacion', label: 'Cómo funciona' },
   { id: 'resultados', label: 'Resultados' },
   { id: 'modelo', label: 'Modelo de Trabajo' },
+  { id: 'trabajos', label: 'Trabajos' },
   { id: 'contacto', label: 'Contacto' },
 ];
 

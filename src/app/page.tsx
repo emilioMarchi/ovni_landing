@@ -7,8 +7,9 @@ import ExplicacionSection from '@/components/sections/ExplicacionSection';
 import ResultadosSection from '@/components/sections/ResultadosSection';
 import ModeloTrabajoSection from '@/components/sections/ModeloTrabajoSection';
 import ContactoSection from '@/components/sections/ContactoSection';
+import TrabajosSection from '@/components/sections/TrabajosSection';
 
-const SECTION_IDS = ['hero', 'explicacion', 'resultados', 'modelo', 'contacto'];
+const SECTION_IDS = ['hero', 'explicacion', 'resultados', 'modelo', 'trabajos', 'contacto'];
 
 // Colores de fondo limpios y diferenciados para cada sección (ultra ligeros, sin blur ni scripts pesados)
 const SECTION_BG_COLORS = [
@@ -16,6 +17,7 @@ const SECTION_BG_COLORS = [
   '#08090a', // Video: negro cine puro
   '#081822', // Resultados: cian petróleo
   '#1a140d', // Modelo: carbón cálido
+  '#0c1015', // Trabajos: grafito oscuro
   '#0b141a', // Contacto: azul profundo
 ];
 
@@ -158,6 +160,7 @@ export default function Home() {
         <ExplicacionSection />
         <ResultadosSection />
         <ModeloTrabajoSection />
+        <TrabajosSection />
         <ContactoSection />
       </main>
     </div>
