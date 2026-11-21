@@ -39,6 +39,11 @@ export default function InstagramSection() {
     setIndex((actual) => (actual + direccion + PUBLICACIONES_INSTAGRAM.length) % PUBLICACIONES_INSTAGRAM.length);
   };
 
+  const handleWheel = useCallback((e: React.WheelEvent<HTMLAnchorElement>) => {
+    e.stopPropagation();
+    window.dispatchEvent(new WheelEvent('wheel', { deltaY: e.deltaY, cancelable: true }));
+  }, []);
+
   return (
     <section
       id="instagram"
@@ -91,6 +96,14 @@ export default function InstagramSection() {
                         <ExternalLink className="w-4 h-4" />
                       </a>
                     </blockquote>
+                    <a
+                      href={url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onWheel={handleWheel}
+                      aria-label="Abrir publicación en Instagram"
+                      className="absolute inset-0 z-10 block focus:outline-none focus:ring-2 focus:ring-celeste-muted"
+                    />
                   </div>
                 </div>
                 <a
